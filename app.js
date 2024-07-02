@@ -14,17 +14,28 @@ import messageRoute from "./routes/message.route.js";
 const app = express();
 const server = http.createServer(app); // Create an HTTP server instance
 
+// CORS setup to allow all origins and credentials
+const corsOptions = {
+  origin: '*', // Allow all origins
+  credentials: true, // Allow cookies and credentials
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 
-// CORS setup to allow all origins
-app.use(cors());
-
-app.use(cookieParser());
-
-// Socket.io setup
+// Socket.io setup to allow all origins
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow all origins
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   },
 });
 
@@ -64,7 +75,7 @@ const PORT = process.env.PORT || 8800;
 
 // Routes
 app.use("/api/demo", (req, res) => {
-  res.json({ "msg": "Server is running hello world - ", PORT });
+  res.json({ msg: "Server is running hello world - ", PORT });
 });
 
 app.use("/api/auth", authRoute);
