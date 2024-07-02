@@ -61,10 +61,15 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
   });
 });
+
+
+const PORT = process.env.PORT || 8800;
 // Routes
+
 app.use("/api/demo", (req, res) => {
-  res.json({ "msg": "Server is running on localhost 8800, hello world" });
+  res.json({ "msg": "Server is running hello world - ", PORT });
 });
+
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
@@ -72,7 +77,6 @@ app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
-const PORT = process.env.PORT || 8800;
 
 server.listen(PORT, () => {
   console.log(`Server and Socket.io listening on port ${PORT}`);
