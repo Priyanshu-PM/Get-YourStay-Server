@@ -15,18 +15,16 @@ const app = express();
 const server = http.createServer(app); // Create an HTTP server instance
 
 app.use(express.json());
-const corsOptions = {
-  origin: 'https://get-yourstay.vercel.app/', // Adjust to your frontend URL
-  credentials: true,
-  optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+
+// CORS setup to allow all origins
+app.use(cors());
+
 app.use(cookieParser());
 
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: "https://get-yourstay.vercel.app/",
+    origin: "*", // Allow all origins
   },
 });
 
@@ -62,10 +60,9 @@ io.on("connection", (socket) => {
   });
 });
 
-
 const PORT = process.env.PORT || 8800;
-// Routes
 
+// Routes
 app.use("/api/demo", (req, res) => {
   res.json({ "msg": "Server is running hello world - ", PORT });
 });
@@ -77,8 +74,6 @@ app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 
-
 server.listen(PORT, () => {
   console.log(`Server and Socket.io listening on port ${PORT}`);
 });
-
